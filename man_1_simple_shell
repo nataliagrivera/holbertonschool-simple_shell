@@ -1,0 +1,40 @@
+.TH SIMPLE_SHELL 1 "August 25, 2023" Linux "USER MANUALS"
+
+.SH NAME
+Simple Shell - command language interpreter
+
+.SH SYNOPSIS
+ #include "simple_shell.h"
+ ./hsh.
+
+.SH DESCRIPTION
+Simple shell is one version of a command language interpreter that executes commands read from the standard input. Its functionality is limited to certain shell builtin functions found in the environmental variables.
+
+.SS PATH
+It does not yet handle piping, redirections, pattern matching, variable expansions.
+
+.SS INVOCATION
+.IP Interactive
+Simple shell can be invoked by typing ./hsh.
+
+.IP Non-Interactive
+Simple shell can also be invoked via a pipe (e.g., echo "/bin/ls" | ./hsh).
+
+.SS Command Execution
+After a command has been split into words, if it results in a simple command and an optional list of arguments, the following actions are taken.
+
+/bin/ls
+
+.IP [[flags]...[arguments]]
+Lists files in the current directory according to the flags given by the user.
+
+.SS SHELL BUILTIN COMMANDS
+    env - prints environmental variables
+    exit - exits out of the simple shell and returns to the user's original shell
+
+.SH BUGS
+No known bugs.
+
+.SH AUTHORS
+Joshua Santiago <joshua@example.com>
+Natalia Rivera <natalia@example.com>
