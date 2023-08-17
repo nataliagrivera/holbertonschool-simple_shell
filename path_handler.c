@@ -17,7 +17,7 @@ char **get_paths(void)
 	/* Check if PATH environment variable exists */
 	if (path_env == NULL)
 	{
-		perror("error: ");
+		perror("error ");
 		return (NULL);
 	}
 
@@ -28,7 +28,7 @@ char **get_paths(void)
 		paths = realloc(paths, sizeof(char *) * (num_paths + 1));
 		if (paths == NULL)
 		{
-			perror("error: ");
+			perror("error ");
 			return (NULL);
 		}
 
