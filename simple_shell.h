@@ -8,5 +8,6 @@
 
 int main(int ac, char **av, char **env);
 void execute_command(char *command, char **env);
+char **get_paths(void);
 
 #endif
