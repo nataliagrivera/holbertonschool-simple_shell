@@ -12,13 +12,13 @@ void execute_command(char *command, char **env)
 	char **tokens = NULL;
 	int token_count = 0;
 
+	get_paths();
 	token = strtok(command, " \n"); /* Tokenize the command string */
 	if (token == NULL)
 		return;
 
 	while (token != NULL)
 	{
-		/* Reallocate memory for the tokens array to accommodate the next token */
 		tokens = realloc(tokens, sizeof(char *) * (token_count + 1));
 		if (tokens == NULL)
 		{
