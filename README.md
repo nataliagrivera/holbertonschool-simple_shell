@@ -28,9 +28,9 @@ Releade date December 9, 2022.
 
   We can suspend the execution of a process until one of its children terminates using the wait function. A call to wait() blocks the calling process until one of its child processes exits or a signal is received. After child process terminates, parent continues its execution after wait system call instruction.
 
-## 📢 Project Information
+## Project Information
 
-### 🎯 Tasks
+### Tasks
 
   * Task 0 - Write a README, Write a man for your shell & AUTHOR file.
 
@@ -112,7 +112,7 @@ You don’t have to:
     - wait4 (man 2 wait4)
     - write (man 2 write)
 
-## 🗃️ Documentation
+## Documentation
 
 ### Usage
 
