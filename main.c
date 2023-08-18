@@ -18,34 +18,35 @@ int main(int ac, char **av, char **env)
 	{
 		handle_non_interactive_mode(env);
 	}
-		else
+	else
+	{
+		while (1)
 		{
-			while (1)
-			{
-				(void)ac; /* Suppress unused parameter warning */
-				(void)av; /* Suppress unused parameter warning */
+			(void)ac; /* Suppress unused parameter warning */
+			(void)av; /* Suppress unused parameter warning */
 
-				printf("($) ");						/* Display the shell prompt */
-				read = getline(&line, &len, stdin); /* Read user input */
+			printf("($) ");						/* Display the shell prompt */
+			read = getline(&line, &len, stdin); /* Read user input */
 
-				if (read == -1)
-					break;
+			if (read == -1)
+				break;
+			if (line[read - 1] == '\n')
+				line[read - 1] = '\0'; /* Remove newline character */
 
-				if (line[read - 1] == '\n')
-					line[read - 1] = '\0'; /* Remove newline character */
+			if (strcmp(line, "exit") == 0)
+				break;
 
-				if (strcmp(line, "exit") == 0)
-					break;
+			if (isspace((unsigned char)line[0]))
+				continue;
 
-				if (isspace((unsigned char)line[0]))
-					continue;
+			if (line[0] == '\0' || line[0] == ' ')
+				continue;
 
-				if (line[0] == '\0' || line[0] == ' ')
-					continue;
-
-				execute_command(line, env); /* Execute the command entered by user */
-			}
-			free(line); /* Free allocated memory */
-			return (0); /* Exit the shell */
+			execute_command(line, env); /* Execute the command entered by user */
 		}
+		free(line); /* Free allocated memory */
+		return (0); /* Exit the shell */
 	}
+	free(line); /* Free allocated memory */
+	return (0); /* Exit the shell */
+}
