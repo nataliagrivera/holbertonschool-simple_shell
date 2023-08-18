@@ -39,7 +39,7 @@ void execute_command(char *command, char **env)
 	if (child_pid == 0)
 	{
 		execve(tokens[0], tokens, env); /* Execute the command using execve */
-		perror("error: ");				/* Print an error message if execve fails */
+		perror("error ");			/* Print an error message if execve fails */
 		exit(EXIT_FAILURE);				/* Exit child process with failure status */
 	}
 	else
