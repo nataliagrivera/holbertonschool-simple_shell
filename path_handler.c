@@ -29,6 +29,7 @@ char **get_paths(void)
 		if (paths == NULL)
 		{
 			perror("error ");
+
 			free(paths);
 			return (NULL);
 		}
