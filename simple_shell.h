@@ -13,4 +13,7 @@ int main(int ac, char **av, char **env);
 void execute_command(char *command, char **env);
 char **get_paths(void);
 void handle_non_interactive_mode(char **env);
+char *find_executable_path(char **paths, const char *command);
+void create_child_process(char **tokens, char **env, const char *exec_path);
+void concatenate_path(const char *path, const char *command, char *exec_path);
 #endif
