@@ -42,6 +42,7 @@ char **get_paths(void)
 	/* Add a NULL pointer at the end to terminate the array */
 	paths = realloc(paths, sizeof(char *) * (num_paths + 1));
 	paths[num_paths] = NULL;
-	
+
+	free(paths);
 	return (paths);
 }
