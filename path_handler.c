@@ -29,7 +29,6 @@ char **get_paths(void)
 		if (paths == NULL)
 		{
 			perror("error ");
-
 			free(paths);
 			return (NULL);
 		}
@@ -43,6 +42,5 @@ char **get_paths(void)
 	paths = realloc(paths, sizeof(char *) * (num_paths + 1));
 	paths[num_paths] = NULL;
 
-	free(paths);
 	return (paths);
 }
