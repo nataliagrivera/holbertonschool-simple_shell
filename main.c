@@ -44,8 +44,6 @@ int main(int ac, char **av, char **env)
 
 			execute_command(line, env); /* Execute the command entered by user */
 		}
-		free(line); /* Free allocated memory */
-		return (0); /* Exit the shell */
 	}
 	return (0);
 }
@@ -88,8 +86,4 @@ void handle_non_interactive_mode(char **env)
 	}
 
 	free(line); /* Free the allocated memory for the input line */
-}
-
-	free(line); /* Free allocated memory */
-	return (0); /* Exit the shell */
 }
