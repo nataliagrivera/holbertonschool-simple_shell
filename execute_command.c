@@ -66,7 +66,7 @@ void create_child_process(char **tokens, char **env, char *full_path)
 	}
 	if (child_pid == 0)
 	{
-		execve(tokens[0], tokens, env); /* Execute the command using execve */
+		execve(full_path, tokens, env); /* Execute the command using execve */
 		perror("error ");			/* Print an error message if execve fails */
 		exit(EXIT_FAILURE);				/* Exit child process with failure status */
 	}
@@ -162,4 +162,3 @@ char **get_paths(void)
 
 	return (paths);
 }
-
