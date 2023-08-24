@@ -10,11 +10,6 @@ void execute_command(char *command, char **env)
 	char *token = NULL;
 	char **tokens = NULL;
 	int token_count = 0;
-	char *full_path;
-	char **paths = get_paths();
-
-	if (paths == NULL)
-		return;
 
 	token = strtok(command, " \n"); /* Tokenize the command string */
 	if (token == NULL)
@@ -28,37 +23,32 @@ void execute_command(char *command, char **env)
 			perror("realloc");
 			return;
 		}
-		tokens[token_count] = token; /* Store current token in the tokens array */
-		token_count++;				 /* Increment the token count */
-		token = strtok(NULL, " \n"); /* Get the next token from the command string */
-		tokens[token_count] = NULL;	 /* Set next element in the array to NULL */
+		tokens[token_count] = strdup(token); /*Store current token in tokens array*/
+		token_count++;						 /* Increment the token count */
+		token = strtok(NULL, " \n");		 /* Get next token from command string */
 	}
-
-	full_path = construct_full_path(tokens[0], paths);
-	if (full_path != NULL)
+	tokens = realloc(tokens, sizeof(char *) * (token_count + 1));
+	if (tokens == NULL)
 	{
-		create_child_process(tokens, env, full_path);
-		free(full_path);
+		perror("realloc");
+		return;
 	}
-	else
-	{
-		printf("Command not found: %s\n", tokens[0]);
-	}
+	tokens[token_count] = NULL; /* Set next element in the array to NULL */
 
-	free(tokens);
+	create_child_process(tokens, env); /* Create child process & exec command */
+
+	free_token_array(tokens, token_count); /* Free allocated memory */
 }
 
 /**
  * create_child_process - Create a child process and execute the command
  * @tokens: The tokenized command and arguments
- * @full_path: path concat
  * @env: The environment variables
  */
-void create_child_process(char **tokens, char **env, char *full_path)
+void create_child_process(char **tokens, char **env)
 {
-	pid_t child_pid;
+	pid_t child_pid = fork(); /* Create a child process */
 
-	child_pid = fork(); /* Create a child process */
 	if (child_pid == -1)
 	{
 		perror("fork"); /* Print error message if fork fails */
@@ -66,7 +56,7 @@ void create_child_process(char **tokens, char **env, char *full_path)
 	}
 	if (child_pid == 0)
 	{
-		execve(full_path, tokens, env); /* Execute the command using execve */
+		execve(tokens[0], tokens, env); /* Execute the command using execve */
 		perror("error ");				/* Print an error message if execve fails */
 		exit(EXIT_FAILURE);				/* Exit child process with failure status */
 	}
@@ -77,48 +67,6 @@ void create_child_process(char **tokens, char **env, char *full_path)
 }
 
 /**
- * construct_full_path - Constructs full path for command using available paths
- * @command: The command for which to construct the full path
- * @paths: An array of paths to search for the command
- * Return: A dynamically allocated string containing the full path,
- *         or NULL if the command is not found in any of the paths
- */
-char *construct_full_path(char *command, char **paths)
-{
-	int i = 0;
-	char *full_path = NULL;
-
-	while (paths[i] != NULL)
-	{
-		/* Allocate memory for the potential full path */
-		full_path = malloc(strlen(paths[i]) + strlen(command) + 2);
-		if (full_path == NULL)
-		{
-			perror("malloc");
-			return (NULL);
-		}
-		if (access(command, X_OK) == -1)
-		{
-			/* Construct the full path by concatenating the path and command */
-			strcpy(full_path, paths[i]);
-			strcat(full_path, "/");
-			strcat(full_path, command);
-
-			/* Check if the potential path is executable */
-			if (access(full_path, X_OK) == 0)
-				return (full_path); /* Return the valid full path */
-
-			/* Free memory and move to the next path */
-			free(full_path);
-			i++;
-		}
-		else
-			return (command);
-	}
-
-	return (NULL); /* Command not found in any path */
-}
-/**
  * get_paths - Extracts paths from the PATH environment variable
  * Return: A pointer to an array of strings containing the paths
  *         NULL on failure or if PATH is not found
@@ -126,12 +74,11 @@ char *construct_full_path(char *command, char **paths)
 char **get_paths(void)
 {
 	/* Get the value of the PATH environment variable */
-	char *path_env = NULL;
+	char *path_env = getenv("PATH");
 	char *token = NULL;
 	int num_paths = 0;
 	char **paths = NULL;
 
-	path_env = getenv("PATH");
 	/* Check if PATH environment variable exists */
 	if (path_env == NULL)
 	{
@@ -147,18 +94,23 @@ char **get_paths(void)
 		if (paths == NULL)
 		{
 			perror("error ");
-			free(paths);
+			free_paths_array(paths, num_paths);
 			return (NULL);
 		}
 
-		paths[num_paths] = token; /* Store the current path in the array */
-		num_paths++;			  /* You increment the num_paths counter.*/
-		token = strtok(NULL, ":"); /* Move to the next token */
+		paths[num_paths] = strdup(token); /* Store the current path in the array */
+		num_paths++;					  /* Increment the num_paths counter. */
+		token = strtok(NULL, ":");		  /* Move to the next token */
 	}
-
-	/* Add a NULL pointer at the end to terminate the array */
 	paths = realloc(paths, sizeof(char *) * (num_paths + 1));
-	paths[num_paths] = NULL;
+	if (paths == NULL)
+	{
+		perror("error ");
+		free_paths_array(paths, num_paths);
+		return (NULL);
+	}
+	paths[num_paths] = NULL; /* Add NULL pointer at the end of the array */
 
+	free(path_env); /* Free the environment variable string */
 	return (paths);
 }
