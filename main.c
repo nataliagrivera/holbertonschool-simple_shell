@@ -67,8 +67,6 @@ void handle_non_interactive_mode(char **env)
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t read;
-	int status;
-	pid_t child_pid = fork();
 
 	while ((read = getline(&line, &len, stdin)) != -1)
 	{
@@ -81,21 +79,8 @@ void handle_non_interactive_mode(char **env)
 		if (line[0] == '\0' || line[0] == ' ')
 			continue;
 
-		if (child_pid == -1)
-		{
-			perror("fork");
-			return;
-		}
-
-		if (child_pid == 0)
-		{
-			execute_command(line, env);
-			exit(EXIT_SUCCESS);
-		}
-		else
-		{
-			waitpid(child_pid, &status, 0);
-		}
+		/* Execute the command specified in the input line */
+		execute_command(line, env);
 	}
 	free(line);
 }

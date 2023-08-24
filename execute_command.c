@@ -23,9 +23,9 @@ void execute_command(char *command, char **env)
 			perror("realloc");
 			return;
 		}
-		tokens[token_count] = strdup(token); /* Store current token in the tokens array */
+		tokens[token_count] = strdup(token); /*Store current token in tokens array*/
 		token_count++;						 /* Increment the token count */
-		token = strtok(NULL, " \n");		 /* Get the next token from the command string */
+		token = strtok(NULL, " \n");		 /* Get next token from command string */
 	}
 	tokens = realloc(tokens, sizeof(char *) * (token_count + 1));
 	if (tokens == NULL)
@@ -35,7 +35,7 @@ void execute_command(char *command, char **env)
 	}
 	tokens[token_count] = NULL; /* Set next element in the array to NULL */
 
-	create_child_process(tokens, env); /* Create child process and execute command */
+	create_child_process(tokens, env); /* Create child process & exec command */
 
 	free_token_array(tokens, token_count); /* Free allocated memory */
 }
@@ -48,6 +48,7 @@ void execute_command(char *command, char **env)
 void create_child_process(char **tokens, char **env)
 {
 	pid_t child_pid = fork(); /* Create a child process */
+	int status;
 
 	if (child_pid == -1)
 	{
@@ -62,7 +63,8 @@ void create_child_process(char **tokens, char **env)
 	}
 	else
 	{
-		wait(NULL); /* Parent process waits for the child process to complete */
+		/* Wait specifically for the child process to complete */
+		waitpid(child_pid, &status, 0);
 	}
 }
 
