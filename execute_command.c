@@ -48,6 +48,7 @@ void execute_command(char *command, char **env)
 void create_child_process(char **tokens, char **env)
 {
 	pid_t child_pid = fork(); /* Create a child process */
+	int status;
 
 	if (child_pid == -1)
 	{
@@ -62,7 +63,8 @@ void create_child_process(char **tokens, char **env)
 	}
 	else
 	{
-		wait(NULL); /* Parent process waits for the child process to complete */
+		/* Wait specifically for the child process to complete */
+		waitpid(child_pid, &status, 0);
 	}
 }
 
