@@ -12,7 +12,6 @@
 int main(int ac, char **av, char **env);
 void execute_command(char *command, char **env);
 char **get_paths(void);
-void handle_non_interactive_mode(char **env);
 void create_child_process(char **tokens, char **env);
 void free_token_array(char **tokens, int token_count);
 void free_paths_array(char **paths, int num_paths);
