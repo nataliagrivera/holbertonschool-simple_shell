@@ -30,7 +30,10 @@ int main(int ac, char **av, char **env)
 		trimmed_line = trim_whitespace(line);
 
 		if (strcmp(trimmed_line, "exit") == 0)
-			break;
+			{
+				free(line);
+				return (2);
+			}
 
 		if (trimmed_line[0] == '\0')
 			continue;
