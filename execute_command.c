@@ -77,7 +77,7 @@ void execute_command(char *command, char **env)
 	}
 	tokens[token_count] = NULL; /* Set next element in the array to NULL */
 
-	full_path = get_command_path(tokens[0]); /* Get the full path of the command */
+	full_path = get_command_path(tokens[0]);
 	if (full_path == NULL)
 	{
 		free_token_array(tokens, token_count);
@@ -108,11 +108,10 @@ void create_child_process(char **tokens, char **env)
 	if (child_pid == 0)
 	{
 		if (strcmp(tokens[0], "exit") == 0)
-			exit(2);                                                     /* Set exit status to 2 for the "exit" command */
-			
-		execve(tokens[0], tokens, env);									 /* Execute the command using execve */
-		perror("error ");												 /* Print an error message if execve fails */
-		exit(EXIT_FAILURE); /* Exit child process with failure status */ /* Exit child process with failure status */
+			exit(2);                  /* Set exit status to 2 for the "exit" command */
+		execve(tokens[0], tokens, env);	/* Execute the command using execve */
+		perror("error ");             /* Print an error message if execve fails */
+		exit(EXIT_FAILURE);           /* Exit child process with failure status */
 	}
 	else
 	{
