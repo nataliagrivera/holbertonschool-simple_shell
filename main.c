@@ -32,7 +32,7 @@ int main(int ac, char **av, char **env)
 		if (strcmp(trimmed_line, "exit") == 0)
 			{
 				free(line);
-				return (2);
+				exit (2);
 			}
 
 		if (trimmed_line[0] == '\0')
