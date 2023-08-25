@@ -49,20 +49,19 @@ int main(int ac, char **av, char **env)
  */
 char *trim_whitespace(char *str)
 {
-    char *start = str;  /* Pointer to the start of the string */
-    char *end = str + strlen(str) - 1;  /* Pointer to the end of the string */
+	char *start = str;				   /* Pointer to the start of the string */
+	char *end = str + strlen(str) - 1; /* Pointer to the end of the string */
 
-    /* Remove leading whitespace */
-    while (isspace((unsigned char)*start))
-        start++;
+	/* Remove leading whitespace */
+	while (isspace((unsigned char)*start))
+		start++;
 
-    /* Remove trailing whitespace */
-    while (end > start && isspace((unsigned char)*end))
-        end--;
+	/* Remove trailing whitespace */
+	while (end > start && isspace((unsigned char)*end))
+		end--;
 
-    /* Null-terminate the trimmed string */
-    end[1] = '\0';
+	/* Null-terminate the trimmed string */
+	end[1] = '\0';
 
-    return (start);  /* Return the trimmed string */
+	return (start); /* Return the trimmed string */
 }
-   

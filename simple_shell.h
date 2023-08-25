@@ -17,4 +17,5 @@ void create_child_process(char **tokens, char **env);
 void free_token_array(char **tokens, int token_count);
 void free_paths_array(char **paths, int num_paths);
 char *trim_whitespace(char *str);
+char *get_command_path(char *command_name);
 #endif

@@ -1,6 +1,47 @@
 #include "simple_shell.h"
 
 /**
+ * get_command_path - Get the full path of a command
+ * @command_name: The name of the command
+ * Return: A dynamically allocated string containing the full path
+ *         NULL if the command is not found
+ */
+char *get_command_path(char *command_name)
+{
+	char *command_path = "/bin/";
+	char *full_path;
+
+	if (access(command_name, X_OK) == 0)
+	{
+		full_path = strdup(command_name);
+		if (full_path == NULL)
+		{
+			perror("malloc");
+			return (NULL);
+		}
+		return (full_path);
+	}
+
+	full_path = malloc(strlen(command_path) + strlen(command_name) + 1);
+	if (full_path == NULL)
+	{
+		perror("malloc");
+		return (NULL);
+	}
+	sprintf(full_path, "%s%s", command_path, command_name);
+
+	/* Check if the full path is executable */
+	if (access(full_path, X_OK) != 0)
+	{
+		perror("Command not found");
+		free(full_path);
+		return (NULL);
+	}
+
+	return (full_path);
+}
+
+/**
  * execute_command - Execute a command using fork and execve
  * @command: The command to execute
  * @env: The environment variables
@@ -10,6 +51,7 @@ void execute_command(char *command, char **env)
 	char *token = NULL;
 	char **tokens = NULL;
 	int token_count = 0;
+	char *full_path;
 
 	token = strtok(command, " \n"); /* Tokenize the command string */
 	if (token == NULL)
@@ -23,7 +65,7 @@ void execute_command(char *command, char **env)
 			perror("realloc");
 			return;
 		}
-		tokens[token_count] = strdup(token); /*Store current token in tokens array*/
+		tokens[token_count] = strdup(token); /* Store token in tokens array */
 		token_count++;						 /* Increment the token count */
 		token = strtok(NULL, " \n");		 /* Get next token from command string */
 	}
@@ -35,9 +77,17 @@ void execute_command(char *command, char **env)
 	}
 	tokens[token_count] = NULL; /* Set next element in the array to NULL */
 
-	create_child_process(tokens, env); /* Create child process & exec command */
+	full_path = get_command_path(tokens[0]);/* Get the full path of the command */
+	if (full_path == NULL)
+	{
+		free_token_array(tokens, token_count);
+		return;
+	}
 
-	free_token_array(tokens, token_count); /* Free allocated memory */
+	free(tokens[0]);
+	tokens[0] = full_path;
+	create_child_process(tokens, env);
+	free_token_array(tokens, token_count);
 }
 
 /**
